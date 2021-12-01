@@ -30,12 +30,23 @@ fn main() {
     }
 
     // Reading the file
+    let mut is_first: bool = true;
+    let mut last_num: u32 = 0;
+    let mut num_increases = 0;
     if let Ok(lines) = read_lines(input) {
         // Consumes the iterator, returns an (Optional) String
         for line in lines {
             if let Ok(ip) = line {
-                println!("{}", ip)
+                let num: u32 = ip.trim().parse().expect("Not a number");
+                if !is_first {
+                    if num > last_num {
+                        num_increases += 1;
+                    }
+                }
+                is_first = false;
+                last_num = num;
             }
         }
     }
+    println!("Day 1: {} increases", num_increases)
 }

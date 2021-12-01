@@ -1,6 +1,8 @@
 extern crate argparse;
 
+use std::io::{self, BufRead};
 use std::fs::File;
+use std::path::Path;
 use argparse::{ArgumentParser, StoreTrue, Store};
 
 // Define readlines function discussed here:
@@ -8,17 +10,17 @@ use argparse::{ArgumentParser, StoreTrue, Store};
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where P: AsRef<Path>, {
     let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines());
+    Ok(io::BufReader::new(file).lines())
 }
 
 fn main() {
     // Argument Parsing
     let mut verbose = false;
-    let mut input = "";
+    let mut input = String::new();
     {
         let mut ap = ArgumentParser::new();
         ap.set_description("Day X AOC 2021");
-        ap.refer(&mut name)
+        ap.refer(&mut input)
             .add_option(&["-i", "--input"], Store,
             "Filepath to input data");
         ap.refer(&mut verbose)
