@@ -32,21 +32,26 @@ function GetIntArrayFromFile(filepath::String)
     return result
 end
 
-let numbers = GetIntArrayFromFile(input_filepath)
+function WindowIncreases(numbers::Array{T, 1}, window_size::UInt32) where T <: Number
     is_first::Bool = true
     num_increases::UInt32 = 0
-    last_num::UInt32 = 0
+    last_sum::T = 0
 
-    for num = numbers
+    for i in 1:length(numbers)-(window_size-1)
+        sum_val = sum(numbers[i:i+(window_size-1)])
         if !is_first
-            if num > last_num
+            if sum_val > last_sum
                 num_increases += 1
             end
         end
-        last_num = num
+        last_sum = sum_val
         is_first = false
     end
+    return num_increases
+end
 
-    println("Day 1: ", num_increases, " increases")
+let numbers = GetIntArrayFromFile(input_filepath)
+    println("Day 1 part 1: ", WindowIncreases(numbers, UInt32(1)), " increases")
+    println("Day 1 part 2: ", WindowIncreases(numbers, UInt32(3)), " increases")
 end
 
