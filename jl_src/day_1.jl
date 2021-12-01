@@ -21,13 +21,23 @@ input_filepath = parsed_args["input"]
 verbose = parsed_args["verbose"]
 
 # Process files
-open(input_filepath) do f
+function GetIntArrayFromFile(filepath::String)
+    result = Array{UInt32, 1}()
+    open(input_filepath) do f
+        for line in readlines(f)
+            num = parse(UInt32, line)
+            append!(result, [num])
+        end
+    end
+    return result
+end
+
+let numbers = GetIntArrayFromFile(input_filepath)
     is_first::Bool = true
     num_increases::UInt32 = 0
     last_num::UInt32 = 0
 
-    for line in readlines(f)
-        num = parse(UInt32, line)
+    for num = numbers
         if !is_first
             if num > last_num
                 num_increases += 1
