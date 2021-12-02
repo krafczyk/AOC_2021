@@ -2,7 +2,7 @@ extern crate argparse;
 
 use std::io::{self, BufRead};
 use std::fs::File;
-use std::ops::{Add,Sub};
+use std::ops::{Add,Sub,Mul};
 use std::str::FromStr;
 use std::path::Path;
 use argparse::{ArgumentParser, StoreTrue, Store};
@@ -16,20 +16,27 @@ where P: AsRef<Path>, {
     Ok(io::BufReader::new(file).lines())
 }
 
-struct Location<T>
-where T: Add<Output = T>+Sub<Output = T>+Copy, {
+struct LocationA<T>
+where T: Add<Output = T>+Sub<Output = T>+Mul<Output = T>+Copy, {
     x: T,
     depth: T
 }
 
+struct LocationB<T>
+where T: Add<Output = T>+Sub<Output = T>+Mul<Output = T>+Copy, {
+    x: T,
+    depth: T,
+    aim: T,
+}
+
 enum Instructions<T>
-where T: Add<Output = T>+Sub<Output = T>+Copy, {
+where T: Add<Output = T>+Sub<Output = T>+Mul<Output = T>+Copy, {
     Forward(T),
     Down(T),
     Up(T)
 }
 
-impl<T> Location<T> where T: Add<Output = T>+Sub<Output = T>+Copy, {
+impl<T> LocationA<T> where T: Add<Output = T>+Sub<Output = T>+Mul<Output = T>+Copy, {
     fn execute(&mut self, inst: &Instructions::<T>) {
         match inst {
             &Instructions::<T>::Forward(x) => {
@@ -45,8 +52,25 @@ impl<T> Location<T> where T: Add<Output = T>+Sub<Output = T>+Copy, {
     }
 }
 
+impl<T> LocationB<T> where T: Add<Output = T>+Sub<Output = T>+Mul<Output = T>+Copy, {
+    fn execute(&mut self, inst: &Instructions::<T>) {
+        match inst {
+            &Instructions::<T>::Forward(x) => {
+                self.x = self.x + x;
+                self.depth = self.depth + x*self.aim;
+            },
+            &Instructions::<T>::Down(d) => {
+                self.aim = self.aim + d;
+            },
+            &Instructions::<T>::Up(d) => {
+                self.aim = self.aim - d;
+            }
+        }
+    }
+}
+
 fn read_instructions<P, T>(filename: P) -> Vec<Instructions<T>>
-where T: Add<Output = T>+Sub<Output = T>+Copy+FromStr, P: AsRef<Path>, {
+where T: Add<Output = T>+Sub<Output = T>+Mul<Output = T>+Copy+FromStr, P: AsRef<Path>, {
     let re = Regex::new(r"(forward|down|up) ([0-9]*)").unwrap();
     let mut result = Vec::<Instructions::<T>>::new();
     // Reading the file
@@ -90,14 +114,22 @@ fn main() {
     //read_instructions(input);
     let instructions: Vec::<Instructions::<i32>> = read_instructions(input);
 
-    let mut location = Location::<i32>{
+    let mut location_a = LocationA::<i32>{
         x:0,
         depth:0
     };
 
+    let mut location_b = LocationB::<i32>{
+        x:0,
+        depth:0,
+        aim:0,
+    };
+
     for inst in instructions {
-        location.execute(&inst)
+        location_a.execute(&inst);
+        location_b.execute(&inst);
     }
 
-    println!("Day 2 problem 1: {}", location.x*location.depth);
+    println!("Day 2 problem 1: {}", location_a.x*location_a.depth);
+    println!("Day 2 problem 2: {}", location_b.x*location_b.depth);
 }
