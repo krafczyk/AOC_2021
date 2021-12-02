@@ -15,12 +15,16 @@ end
 # Parse arguments
 parsed_args = ArgParse.parse_args(ARGS, s)
 
+# Process files
+function ProcessFile(filepath::String)
+    open(filepath) do f
+        for line in readlines(f)
+        end
+    end
+end
+
 # Get input filepath
 input_filepath = parsed_args["input"]
 verbose = parsed_args["verbose"]
 
-# Process files
-open(input_filepath) do f
-    for line in readlines(f)
-    end
-end
+ProcessFile(input_filepath)
