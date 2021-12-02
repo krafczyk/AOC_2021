@@ -13,6 +13,19 @@ where P: AsRef<Path>, {
     Ok(io::BufReader::new(file).lines())
 }
 
+fn process_input<P>(filename: P)
+where P: AsRef<Path>, {
+    // Reading the file
+    if let Ok(lines) = read_lines(input) {
+        // Consumes the iterator, returns an (Optional) String
+        for line in lines {
+            if let Ok(ip) = line {
+                println!("{}", ip)
+            }
+        }
+    }   
+}
+
 fn main() {
     // Argument Parsing
     let mut verbose = false;
@@ -29,13 +42,5 @@ fn main() {
         ap.parse_args_or_exit();
     }
 
-    // Reading the file
-    if let Ok(lines) = read_lines(input) {
-        // Consumes the iterator, returns an (Optional) String
-        for line in lines {
-            if let Ok(ip) = line {
-                println!("{}", ip)
-            }
-        }
-    }
+    process_input(input);
 }
