@@ -1,4 +1,3 @@
-
 import ArgParse
 
 # Build ArgParsing Table
