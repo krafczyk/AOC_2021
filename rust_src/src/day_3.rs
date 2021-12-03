@@ -88,6 +88,79 @@ fn problem_1(input: &Vec<String>) {
     println!("Day 3 problem 1: {}", power_rate);
 }
 
+fn find_o2gen_rating(input: &Vec<String>, idx: usize) -> usize {
+    if input.len() == 1 { 
+        return usize::from_str_radix(&input[0], 2).unwrap();
+    } else {
+        let mut num_zeros: usize = 0;
+        let mut num_ones: usize = 0;
+        // Count number of ones/zeros in the designated column
+        for input_num in input {
+            match input_num.chars().nth(idx) {
+                Some('0') => num_zeros += 1,
+                Some('1') => num_ones += 1,
+                Some(_) => println!("Unexpected character!"),
+                _ => println!("Some error was encountered!")
+            }
+        }
+        let mut new_list = Vec::<String>::new();
+        if num_zeros > num_ones {
+            for input_num in input {
+                if let Some('0') = input_num.chars().nth(idx) {
+                    new_list.push(input_num.clone());
+                }
+            }
+        } else {
+            for input_num in input {
+                if let Some('1') = input_num.chars().nth(idx) {
+                    new_list.push(input_num.clone());
+                }
+            }
+        }
+        return find_o2gen_rating(&mut new_list, idx+1);
+    }
+}
+
+fn find_co2_rating(input: &Vec<String>, idx: usize) -> usize {
+    if input.len() == 1 { 
+        return usize::from_str_radix(&input[0], 2).unwrap();
+    } else {
+        let mut num_zeros: usize = 0;
+        let mut num_ones: usize = 0;
+        // Count number of ones/zeros in the designated column
+        for input_num in input {
+            match input_num.chars().nth(idx) {
+                Some('0') => num_zeros += 1,
+                Some('1') => num_ones += 1,
+                Some(_) => println!("Unexpected character!"),
+                _ => println!("Some error was encountered!")
+            }
+        }
+        let mut new_list = Vec::<String>::new();
+        if num_zeros > num_ones {
+            for input_num in input {
+                if let Some('1') = input_num.chars().nth(idx) {
+                    new_list.push(input_num.clone());
+                }
+            }
+        } else {
+            for input_num in input {
+                if let Some('0') = input_num.chars().nth(idx) {
+                    new_list.push(input_num.clone());
+                }
+            }
+        }
+        return find_co2_rating(&mut new_list, idx+1);
+    }
+}
+
+fn problem_2(input: &Vec<String>) {
+    let o2gen_rating = find_o2gen_rating(input, 0);
+    let co2_rating = find_co2_rating(input, 0);
+    let lifesupport_rating = o2gen_rating*co2_rating;
+    println!("Day 3 problem 2: {}", lifesupport_rating);
+}
+
 fn main() {
     // Argument Parsing
     let mut verbose = false;
@@ -107,6 +180,7 @@ fn main() {
     let input = process_input(input);
     if let Ok(_) = validate_input(&input) {
         problem_1(&input);
+        problem_2(&input);
     } else {
         println!("There was a problem validating input!");
     }
