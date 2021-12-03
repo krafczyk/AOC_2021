@@ -16,7 +16,7 @@ where P: AsRef<Path>, {
 fn process_input<P>(filename: P)
 where P: AsRef<Path>, {
     // Reading the file
-    if let Ok(lines) = read_lines(input) {
+    if let Ok(lines) = read_lines(filename) {
         // Consumes the iterator, returns an (Optional) String
         for line in lines {
             if let Ok(ip) = line {
