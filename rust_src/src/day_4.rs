@@ -6,8 +6,6 @@ use std::str::FromStr;
 use std::fmt::Display;
 use std::path::Path;
 use std::collections::HashMap;
-//use ndarray::prelude::*;
-//use ndarray::Array;
 use argparse::{ArgumentParser, StoreTrue, Store};
 
 // Define readlines function discussed here:
@@ -92,15 +90,6 @@ fn build_bingo_paths<T>(board: &Vec<Vec<T>>) -> Vec<Vec<&T>> {
 	// Diagnoal paths
     let mut paths: Vec<Vec<&T>> = Vec::new();
 
-	//let mut diag: Vec<&T> = Vec::new();
-	//let mut anti_diag: Vec<&T> = Vec::new();
-    //for i in 0..5 {
-	//	diag.push(&(board[i][i]));
-	//	anti_diag.push(&(board[4-i][i]));
-	//}
-    //paths.push(diag);
-	//paths.push(anti_diag);
-
 	for i in 0..5 {
 		let mut horiz: Vec<&T> = Vec::new();
 		for j in 0..5 {
@@ -131,6 +120,52 @@ where
 	})
 }
 
+fn solve_problem<'a, T>(numbers: &'a Vec<T>, boards: &'a Vec<Vec<Vec<T>>>)
+where
+    T: PartialEq+Copy+std::iter::Sum<&'a T>+std::fmt::Debug+std::ops::Mul<Output=T>+std::fmt::Display
+{
+    // Build board paths
+    let bingo_paths: Vec<Vec<Vec<&T>>> = boards.iter().map(build_bingo_paths).collect();
+
+    let mut winner_idxs: Vec<usize> = Vec::new();
+    let mut winner_nums: Vec<T> = Vec::new();
+    let mut winner_rem_sums: Vec<T> = Vec::new();
+    for i in 0..numbers.len() {
+        let nums = &numbers[0..i+1];
+        let board_results: Vec<bool> =
+            bingo_paths.iter()
+                       .map(|b| check_board_for_bingo(nums, b))
+                       .collect();
+        let winners: Vec<usize> =
+            board_results.into_iter()
+                         .enumerate()
+                         .filter(|(_, b)| *b)
+                         .map(|(i,_)| i).collect();
+        // Remove winners that have already been found
+        let mut winners: Vec<usize> = winners.iter().copied().filter(|num| !winner_idxs.contains(num)).collect();
+        if winners.len() > 0 {
+            let last_num = nums[nums.len()-1];
+            for win_idx in winners {
+                // Add the new winner to the list
+                winner_nums.push(last_num);
+                winner_idxs.push(win_idx);
+                // Compute the remaining sum for the board
+                let board = &boards[win_idx];
+                let remaining_num_sum: T = board.iter()
+                                                .flatten()
+                                                .filter(|num| !nums.contains(num))
+                                                .sum();
+                // Add the new remaining sum to the list.
+                winner_rem_sums.push(remaining_num_sum);
+            }
+        }
+    }
+
+    let len = winner_nums.len();
+
+    println!("Day 4 problem 1: {}", winner_nums[0]*winner_rem_sums[0]);
+    println!("Day 4 problem 2: {}", winner_nums[len-1]*winner_rem_sums[len-1]);
+}
 
 fn main() {
     // Argument Parsing
@@ -151,46 +186,6 @@ fn main() {
     // Read chosen numbers and boards from input data.
     let (numbers, boards) = process_input::<_,u32>(input);
 
-    // Build board paths
-    let bingo_paths: Vec<Vec<Vec<&u32>>> = boards.iter().map(build_bingo_paths).collect();
-
-    //for i in 0..numbers.len() {
-    for i in 0..numbers.len() {
-        let nums = &numbers[0..i+1];
-        let board_results: Vec<bool> =
-            bingo_paths.iter()
-                       .map(|b| check_board_for_bingo(nums, b))
-                       .collect();
-        let res: Vec<usize> =
-            board_results.into_iter()
-                         .enumerate()
-                         .filter(|(_, b)| *b)
-                         .map(|(i,_)| i).collect();
-        if res.len() > 0 {
-            let winner_idx = res[0];
-            let last_num = nums[nums.len()-1];
-            let board = &boards[winner_idx];
-            let remaining_num_sum: u32 = board.iter()
-                                         .flatten()
-                                         .filter(|num| !nums.contains(num))
-                                         .sum();
-            println!("Day 4 problem 1: {}", remaining_num_sum*last_num);
-            break;
-        }
-    }
-
-	//println!("bingo paths");
-	//for path in bingo_paths {
-	//	println!("{:?}", path);
-	//}
-
-	//let func = |b: &Vec<Vec<_>>| {
-	//	print_type_of(b);
-	//	let new_b = array!(*b);
-	//	print_type_of(&new_b);
-	//	println!("{}", &new_b.ndim());
-	//	println!("{:?}", &new_b.shape());
-	//};
-
-    //boards.iter().map(func).collect::<Vec::<()>>();
+    // Solve the day's problem
+    solve_problem::<u32>(&numbers, &boards);
 }
