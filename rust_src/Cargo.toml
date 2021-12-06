@@ -9,6 +9,7 @@ edition = "2018"
 argparse = "0"
 num = "0"
 regex = "1"
+ndarray = "0"
 
 [[bin]]
 name = "day_1"
@@ -21,3 +22,7 @@ path = "src/day_2.rs"
 [[bin]]
 name = "day_3"
 path = "src/day_3.rs"
+
+[[bin]]
+name = "day_4"
+path = "src/day_4.rs"
