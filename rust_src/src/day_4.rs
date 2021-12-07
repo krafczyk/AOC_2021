@@ -16,9 +16,9 @@ where P: AsRef<Path>, {
     Ok(io::BufReader::new(file).lines())
 }
 
-fn print_type_of<T>(_: T) {
-    println!("{}", std::any::type_name::<T>());
-}
+//fn print_type_of<T>(_: T) {
+//    println!("{}", std::any::type_name::<T>());
+//}
 
 fn process_input<P, T>(filename: P) -> (Vec<T>, Vec<Vec<Vec<T>>>)
 where
@@ -142,7 +142,7 @@ where
                          .filter(|(_, b)| *b)
                          .map(|(i,_)| i).collect();
         // Remove winners that have already been found
-        let mut winners: Vec<usize> = winners.iter().copied().filter(|num| !winner_idxs.contains(num)).collect();
+        let winners: Vec<usize> = winners.iter().copied().filter(|num| !winner_idxs.contains(num)).collect();
         if winners.len() > 0 {
             let last_num = nums[nums.len()-1];
             for win_idx in winners {
