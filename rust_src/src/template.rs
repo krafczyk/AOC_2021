@@ -25,7 +25,7 @@ where P: AsRef<Path>, {
         }
     } else {
 		panic!("Problem opening file!");
-	}   
+	}
 }
 
 fn main() {
