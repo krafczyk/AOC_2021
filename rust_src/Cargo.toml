@@ -8,6 +8,7 @@ edition = "2018"
 [dependencies]
 argparse = "0"
 num = "0"
+num-traits = "0"
 regex = "1"
 ndarray = "0"
 
@@ -26,3 +27,7 @@ path = "src/day_3.rs"
 [[bin]]
 name = "day_4"
 path = "src/day_4.rs"
+
+[[bin]]
+name = "day_5"
+path = "src/day_5.rs"
