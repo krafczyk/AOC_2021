@@ -23,7 +23,9 @@ where P: AsRef<Path>, {
                 println!("{}", ip)
             }
         }
-    }   
+    } else {
+		panic!("Problem opening file!");
+	}   
 }
 
 fn main() {

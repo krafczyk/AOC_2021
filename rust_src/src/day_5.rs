@@ -1,6 +1,5 @@
 extern crate argparse;
 extern crate num;
-extern crate num_traits;
 
 use std::io::{self, BufRead};
 use std::fs::File;
@@ -17,7 +16,7 @@ use std::collections::HashMap;
 use std::hash::Hash;
 use argparse::{ArgumentParser, StoreTrue, Store};
 use regex::Regex;
-use num_traits::sign::Signed;
+use num::Signed;
 
 // Define readlines function discussed here:
 // https://doc.rust-lang.org/rust-by-example/std_misc/file/read_lines.html
