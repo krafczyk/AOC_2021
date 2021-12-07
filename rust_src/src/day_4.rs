@@ -5,7 +5,6 @@ use std::fs::File;
 use std::str::FromStr;
 use std::fmt::Display;
 use std::path::Path;
-use std::collections::HashMap;
 use argparse::{ArgumentParser, StoreTrue, Store};
 
 // Define readlines function discussed here:
@@ -76,15 +75,15 @@ where
     return (numbers, boards)
 }
 
-fn show_sorted_pairs<K,V>(map: &HashMap<K,V>)
-where
-	K: Copy+Ord+std::fmt::Debug,
-	V: Copy+std::fmt::Debug,
-{
-	let mut pairs = map.iter().map(|(&num, &count)| (num, count)).collect::<Vec::<(K,V)>>();
-    pairs.sort_by_key(|(num,_)| *num);
-    println!("{:?}", pairs);
-}
+//fn show_sorted_pairs<K,V>(map: &HashMap<K,V>)
+//where
+//	K: Copy+Ord+std::fmt::Debug,
+//	V: Copy+std::fmt::Debug,
+//{
+//	let mut pairs = map.iter().map(|(&num, &count)| (num, count)).collect::<Vec::<(K,V)>>();
+//    pairs.sort_by_key(|(num,_)| *num);
+//    println!("{:?}", pairs);
+//}
 
 fn build_bingo_paths<T>(board: &Vec<Vec<T>>) -> Vec<Vec<&T>> {
 	// Diagnoal paths
