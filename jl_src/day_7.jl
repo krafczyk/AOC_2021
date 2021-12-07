@@ -36,10 +36,22 @@ max_pos = maximum(positions)
 
 possible_positions = collect(min_pos:max_pos)
 
-function fuel_cost(pos)
+function fuel_cost1(pos)
     sum(map(p -> abs(p-pos), positions))
 end
 
-min_fuel = minimum(collect(map(p -> fuel_cost(p), possible_positions)))
+min_fuel1 = minimum(collect(map(p -> fuel_cost1(p), possible_positions)))
 
-println("Day 7 problem 1: ", min_fuel)
+println("Day 7 problem 1: ", min_fuel1)
+
+function fuel_cost(d::T)::T where T
+    d*(d+1)/2
+end
+
+function fuel_cost2(pos)
+    sum(map(p -> fuel_cost(abs(p-pos)), positions))
+end
+
+min_fuel2 = minimum(collect(map(p -> fuel_cost2(p), possible_positions)))
+
+println("Day 7 problem 2: ", min_fuel2)
