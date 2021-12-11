@@ -155,7 +155,7 @@ fn main() {
     let mut input = String::new();
     {
         let mut ap = ArgumentParser::new();
-        ap.set_description("Day X AOC 2021");
+        ap.set_description("Day 9 AOC 2021");
         ap.refer(&mut input)
             .add_option(&["-i", "--input"], Store,
             "Filepath to input data");
