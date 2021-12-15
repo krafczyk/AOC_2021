@@ -62,7 +62,7 @@ where
     let height = the_map.len();
     let width = the_map[0].len();
     let check_bounds = |p: &Point| -> bool {
-        !(p.i < 1 || p.i >= height || p.j < 1 || p.j >= width)
+        !(p.i < 1 || p.i > height || p.j < 1 || p.j > width)
     };
 
     let get_neighbors = |p: &Point| -> Vec<Point> {
@@ -78,10 +78,6 @@ where
         *v = *v+num::cast::<_,T>(1).unwrap();
     }
 
-    //for i in 0..height {
-    //    println!("{:?}", the_map[i]);
-    //}
-
     // Second loop while there are flashers
     let mut num_flashes: usize = 0;
     while the_map.iter().flatten().any(|e| *e>num::cast::<_,T>(9).unwrap()) {
@@ -89,9 +85,6 @@ where
             for j in 1..(width+1) {
                 let p = Point {i: i,j: j};
                 if the_map[i-1][j-1] > num::cast::<_,T>(9).unwrap() {
-                    //println!("Ready to flash");
-                    //println!("i: {}, j: {}", i, j);
-                    //println!("val: {:?}", the_map[i-1][j-1]);
                     // We have one ready to flash
                     let neighbors = get_neighbors(&p);
                     for n in neighbors {
@@ -101,9 +94,7 @@ where
                         }
                     }
                     // Set the point to zero
-                    //println!("Setting to zero");
                     the_map[i-1][j-1] = num::cast::<_,T>(0).unwrap();
-                    //println!("val: {:?}", the_map[i-1][j-1]);
                     num_flashes += 1;
                 }
             }
@@ -121,24 +112,10 @@ where
     T: Copy,
     T: Debug,
 {
-    for i in 0..the_map.len() {
-        println!("{:?}", the_map[i]);
-    }
-
     let mut flash_sequence: Vec<usize> = Vec::new();
-    let mut steps: usize = 0;
-    let num_steps: usize = 5;
-    //while !the_map.iter().flatten().all(|e| *e == num::cast::<_,T>(0).unwrap()) {
-    while steps < num_steps {
-        println!("new step!");
-        for i in 0..the_map.len() {
-            println!("{:?}", the_map[i]);
-        }
+    while !the_map.iter().flatten().all(|e| *e == num::cast::<_,T>(0).unwrap()) {
         let flashes = do_step(the_map);
-        println!("flashes for step: {}", flashes);
         flash_sequence.push(flashes);
-        steps += 1;
-        println!("{} steps", steps);
     }
 
     println!("Day 11 problem 1: {}", flash_sequence.iter().take(100).map(|v| *v).sum::<usize>());
