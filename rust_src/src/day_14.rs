@@ -163,5 +163,5 @@ fn main() {
     }
 
     println!("Day 14 problem 1: {}", counts[10]);
-    println!("Day 14 problem 4: {}", counts[40]);
+    println!("Day 14 problem 2: {}", counts[40]);
 }
